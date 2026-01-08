@@ -118,7 +118,7 @@ exportButton.addTo(map);
 ========================= */
 
 function exportData() {
-  var participantCode = prompt("Enter your expert code (e.g., EXP_01):");
+  var participantCode = prompt("Dê um nome ao ficheiro:");
   if (!participantCode) return;
 
   var exportGeoJSON = JSON.parse(JSON.stringify(secoesAMP));
