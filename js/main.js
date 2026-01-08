@@ -57,13 +57,18 @@ secoesAMP.features.forEach(function (feature) {
 function estilo(feature) {
   return {
     fillColor: feature.properties.classificacao === 1
-      ? '#e41a1c'   // gentrified
-      : '#cccccc',  // non-gentrified
+      ? '#e41a1c'
+      : '#cccccc',
+
+    fillOpacity: feature.properties.classificacao === 1
+      ? 0.6   // gentrified
+      : 0.2, // non-gentrified (lighter)
+
     weight: 1,
-    color: '#333',
-    fillOpacity: 0.6
+    color: '#333'
   };
 }
+
 
 /* =========================
    INTERACTION
