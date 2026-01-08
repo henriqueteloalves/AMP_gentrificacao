@@ -71,6 +71,16 @@ function estilo(feature) {
   };
 }
 
+//Highlight on Mouseover
+function emCadaFeature(feature, layer) {
+  layer.on('mouseover', function () {
+    layer.setStyle({ weight: 3 });
+  });
+  layer.on('mouseout', function () {
+    layer.setStyle(estilo(feature));
+  });
+}
+
 
 /* =========================
    INTERACTION
