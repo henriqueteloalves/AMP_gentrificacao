@@ -71,30 +71,20 @@ function estilo(feature) {
   };
 }
 
-//Highlight on Mouseover
 function emCadaFeature(feature, layer) {
+
+  // Hover highlight
   layer.on('mouseover', function () {
     layer.setStyle({ weight: 3 });
   });
   layer.on('mouseout', function () {
     layer.setStyle(estilo(feature));
   });
-}
 
-
-/* =========================
-   INTERACTION
-   CLICK = TOGGLE
-========================= */
-
-function emCadaFeature(feature, layer) {
+  // Click toggle gentrified / non-gentrified
   layer.on('click', function () {
-
-    // Toggle classification
     feature.properties.classificacao =
       feature.properties.classificacao === 1 ? 0 : 1;
-
-    // Update style
     layer.setStyle(estilo(feature));
   });
 }
