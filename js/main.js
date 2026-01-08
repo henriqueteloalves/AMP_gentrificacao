@@ -67,15 +67,21 @@ function estilo(feature) {
 
 /* =========================
    INTERACTION
-   CLICK = GENTRIFIED
+   CLICK = TOGGLE
 ========================= */
 
 function emCadaFeature(feature, layer) {
   layer.on('click', function () {
-    feature.properties.classificacao = 1;
+
+    // Toggle classification
+    feature.properties.classificacao =
+      feature.properties.classificacao === 1 ? 0 : 1;
+
+    // Update style
     layer.setStyle(estilo(feature));
   });
 }
+
 
 /* =========================
    LOAD GEOJSON
