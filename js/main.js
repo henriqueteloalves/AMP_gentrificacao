@@ -7,36 +7,36 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap'
 }).addTo(map);
 
+//Default classification = NON-GENTRIFIED (0)
+secoesAMP.features.forEach(function(feature){
+  feature.properties.classificacao = 0; // default: non-gentrified
+});
+
+
 // Função de estilo
 function estilo(feature) {
   return {
-    fillColor:
-      feature.properties.classificacao === 1 ? '#e41a1c' :
-      feature.properties.classificacao === 0 ? '#4daf4a' :
-      '#cccccc',
+    fillColor: feature.properties.classificacao === 1
+      ? '#e41a1c'   // gentrified (red)
+      : '#cccccc',  // non-gentrified (grey)
     weight: 1,
     color: '#333',
-    fillOpacity: 0.6
+    fillOpacity: 0.5
   };
 }
+
 
 // Interação
 function emCadaFeature(feature, layer) {
 
   layer.on('click', function () {
-
-    var resposta = prompt(
-      "Classificação:\n" +
-      "1 = Gentrificada\n" +
-      "0 = Não gentrificada"
-    );
-
-    if (resposta === '1' || resposta === '0') {
-      feature.properties.classificacao = parseInt(resposta);
-      layer.setStyle(estilo(feature));
-    }
+    feature.properties.classificacao =
+      feature.properties.classificacao === 1 ? 0 : 1;
+    layer.setStyle(estilo(feature));
   });
+
 }
+
 
 // Carregar o GeoJSON
 L.geoJSON(secoesAMP, {
@@ -45,31 +45,16 @@ L.geoJSON(secoesAMP, {
 }).addTo(map);
 
 // Add this at the bottom of main.js
-var exportButton = L.control({position: 'topright'});
-exportButton.onAdd = function(map){
-    var div = L.DomUtil.create('div', 'export-button');
-    div.innerHTML = '<button onclick="exportData()">Export Results</button>';
-    return div;
+var exportButton = L.control({ position: 'topright' });
+
+exportButton.onAdd = function () {
+  var div = L.DomUtil.create('div', 'export-button');
+  div.innerHTML = '<button onclick="exportData()">Export Responses</button>';
+  return div;
 };
+
 exportButton.addTo(map);
 
-function exportData(){
-    var geojsonData = JSON.stringify(secoesAMP); // your variable
-    var blob = new Blob([geojsonData], {type: "application/json"});
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = 'classified_results.json';
-    a.click();
-}
-// Add a button on the map
-var exportButton = L.control({position: 'topright'});
-exportButton.onAdd = function(map) {
-    var div = L.DomUtil.create('div', 'export-button');
-    div.innerHTML = '<button onclick="exportData()">Export Responses</button>';
-    return div;
-};
-exportButton.addTo(map);
 
 // Function to download JSON of all classified sections
 function exportData() {
