@@ -1,50 +1,63 @@
 console.log(secoesAMP);
-// Criar o mapa
+
+/* =========================
+   MAP SETUP
+========================= */
+
 var map = L.map('map').setView([41.15, -8.61], 11);
 
-// Base map
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap'
 }).addTo(map);
 
-//Default classification = NON-GENTRIFIED (0)
-secoesAMP.features.forEach(function(feature){
-  feature.properties.classificacao = 0; // default: non-gentrified
+/* =========================
+   DEFAULT: NON-GENTRIFIED
+========================= */
+
+secoesAMP.features.forEach(function (feature) {
+  feature.properties.classificacao = 0;
 });
 
+/* =========================
+   STYLE
+========================= */
 
-// Função de estilo
 function estilo(feature) {
   return {
     fillColor: feature.properties.classificacao === 1
-      ? '#e41a1c'   // gentrified (red)
-      : '#cccccc',  // non-gentrified (grey)
+      ? '#e41a1c'   // gentrified
+      : '#cccccc',  // non-gentrified
     weight: 1,
     color: '#333',
-    fillOpacity: 0.5
+    fillOpacity: 0.6
   };
 }
 
+/* =========================
+   INTERACTION
+   CLICK = GENTRIFIED
+========================= */
 
-// Interação
 function emCadaFeature(feature, layer) {
-
   layer.on('click', function () {
-    feature.properties.classificacao =
-      feature.properties.classificacao === 1 ? 0 : 1;
+    feature.properties.classificacao = 1;
     layer.setStyle(estilo(feature));
   });
-
 }
 
+/* =========================
+   LOAD GEOJSON
+========================= */
 
-// Carregar o GeoJSON
 L.geoJSON(secoesAMP, {
   style: estilo,
   onEachFeature: emCadaFeature
 }).addTo(map);
 
-// Add this at the bottom of main.js
+/* =========================
+   EXPORT BUTTON
+========================= */
+
 var exportButton = L.control({ position: 'topright' });
 
 exportButton.onAdd = function () {
@@ -55,25 +68,31 @@ exportButton.onAdd = function () {
 
 exportButton.addTo(map);
 
+/* =========================
+   EXPORT FUNCTION
+========================= */
 
-// Function to download JSON of all classified sections
 function exportData() {
-    var participantCode = prompt("Enter your expert code (e.g., EXP_01) for this download:");
-    
-    if (!participantCode) return;
+  var participantCode = prompt("Enter your expert code (e.g., EXP_01):");
+  if (!participantCode) return;
 
-    // Add participant code to each feature
-    var exportGeoJSON = JSON.parse(JSON.stringify(secoesAMP)); // copy to avoid modifying map
-    exportGeoJSON.features.forEach(f => {
-        f.properties.participant_id = participantCode;
-    });
+  var exportGeoJSON = JSON.parse(JSON.stringify(secoesAMP));
 
-    var blob = new Blob([JSON.stringify(exportGeoJSON, null, 2)], {type: "application/json"});
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = 'gentrification_classification.json';
-    a.click();
+  exportGeoJSON.features.forEach(function (f) {
+    f.properties.participant_id = participantCode;
+  });
+
+  var blob = new Blob(
+    [JSON.stringify(exportGeoJSON, null, 2)],
+    { type: "application/json" }
+  );
+
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'gentrification_' + participantCode + '.json';
+  a.click();
 }
+
 
 
