@@ -1,14 +1,46 @@
 console.log(secoesAMP);
 
 /* =========================
-   MAP SETUP
+   MAP SETUP + BASEMAPS
 ========================= */
 
 var map = L.map('map').setView([41.15, -8.61], 11);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+// OpenStreetMap
+var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap'
-}).addTo(map);
+});
+
+// Satellite (Esri World Imagery)
+var satellite = L.tileLayer(
+  'https://server.arcgisonline.com/ArcGIS/rest/services/' +
+  'World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles © Esri'
+  }
+);
+
+// Hybrid = Satellite + labels
+var hybridLabels = L.tileLayer(
+  'https://services.arcgisonline.com/ArcGIS/rest/services/' +
+  'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Esri labels'
+  }
+);
+
+var hybrid = L.layerGroup([satellite, hybridLabels]);
+
+// Default basemap
+osm.addTo(map);
+
+// Basemap control
+var baseMaps = {
+  "OpenStreetMap": osm,
+  "Satellite": satellite,
+  "Hybrid (Satellite + labels)": hybrid
+};
+
+L.control.layers(baseMaps, null, { collapsed: false }).addTo(map);
+
 
 /* =========================
    DEFAULT: NON-GENTRIFIED
