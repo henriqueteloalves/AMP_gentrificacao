@@ -11,7 +11,7 @@ var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap'
 });
 
-// Satellite (Esri World Imagery)
+// Satellite imagery
 var satellite = L.tileLayer(
   'https://server.arcgisonline.com/ArcGIS/rest/services/' +
   'World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -19,15 +19,17 @@ var satellite = L.tileLayer(
   }
 );
 
-// Hybrid = Satellite + labels
-var hybridLabels = L.tileLayer(
-  'https://services.arcgisonline.com/ArcGIS/rest/services/' +
-  'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Esri labels'
+// Labels overlay (streets + boundaries + places)
+var labels = L.tileLayer(
+  'https://server.arcgisonline.com/ArcGIS/rest/services/' +
+  'Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Esri Labels'
   }
 );
 
-var hybrid = L.layerGroup([satellite, hybridLabels]);
+// Hybrid = satellite + labels
+var hybrid = L.layerGroup([satellite, labels]);
+
 
 // Default basemap
 osm.addTo(map);
