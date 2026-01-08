@@ -117,7 +117,7 @@ var exportButton = L.control({ position: 'topright' });
 
 exportButton.onAdd = function () {
   var div = L.DomUtil.create('div', 'export-button');
-  div.innerHTML = '<button onclick="exportData()">Export Responses</button>';
+  div.innerHTML = '<button onclick="exportData()">Descarregar Respostas</button>';
   return div;
 };
 
