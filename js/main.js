@@ -135,7 +135,7 @@ function exportData() {
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
   a.href = url;
-  a.download = 'gentrification_' + participantCode + '.json';
+  a.download = participantCode + '.json';
   a.click();
 }
 
